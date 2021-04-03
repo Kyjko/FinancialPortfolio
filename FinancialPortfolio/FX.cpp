@@ -23,11 +23,11 @@ void FX::Reset(const std::optional<float>& val) {
 	}
 }
 
-float FX::GetReturn() {
+float FX::GetReturn() const noexcept {
 	return rate / original_rate;
 }
 
-double FX::GetLogReturn() {
+double FX::GetLogReturn() const noexcept {
 	return log(rate / original_rate);
 }
 

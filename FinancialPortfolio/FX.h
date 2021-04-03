@@ -15,8 +15,8 @@ public:
 
 	void Reset(const std::optional<float>& val = std::nullopt);
 
-	float GetReturn();
-	double GetLogReturn();
+	float GetReturn() const noexcept;
+	double GetLogReturn() const noexcept;
 
 	std::string name;
 	float rate;

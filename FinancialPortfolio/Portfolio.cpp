@@ -28,7 +28,7 @@ void Portfolio::Reset() {
 	}
 }
 
-void Portfolio::Print() {
+void Portfolio::Print() noexcept {
 	std::cout << "----Portfolio:----" << std::endl;
 	std::cout << "--Stocks--" << std::endl;
 	for (auto i = stocks.begin(); i != stocks.end(); i++) {
@@ -53,5 +53,60 @@ void Portfolio::Add(const FX& fx) {
 void Portfolio::Simulate(uint32_t period) {
 	for (uint32_t i = 0; i < period; i++) {
 		Update();
+	}
+}
+
+void Portfolio::WriteToFile() {
+	std::ofstream ofile("stocks.fp", std::ios::trunc);
+	if (ofile.good()) {
+		for (auto i = stocks.begin(); i != stocks.end(); i++) {
+			ofile.write((const char*)&(i->value), sizeof(float));
+		}
+		ofile.close();
+	}
+	else {
+		std::cout << "couldn't open datafile!" << std::endl;
+	}
+
+	std::ofstream ofile2("fxs.fp", std::ios::trunc);
+	if (ofile2.good()) {
+		for (auto i = fxs.begin(); i != fxs.end(); i++) {
+			ofile2.write((const char*)&(i->rate), sizeof(float));
+		}
+		ofile2.close();
+	}
+	else {
+		std::cout << "couldn't open datafile!" << std::endl;
+	}
+	
+}
+
+void Portfolio::ReadFromFile() {
+	std::ifstream ifile("stocks.fp");
+	if (ifile.good()) {
+		for (auto i = stocks.begin(); i != stocks.end(); i++) {
+			float ival;
+			ifile.read((char*)&ival, sizeof(float));
+			i->value = ival;
+		}
+
+		ifile.close();
+	}
+	else {
+		std::cout << "couldn't open datafile!" << std::endl;
+	}
+
+	std::ifstream ifile2("fxs.fp");
+	if (ifile2.good()) {
+		for (auto i = fxs.begin(); i != fxs.end(); i++) {
+			float ival;
+			ifile2.read((char*)&ival, sizeof(float));
+			i->rate = ival;
+		}
+
+		ifile2.close();
+	}
+	else {
+		std::cout << "couldn't open datafile!" << std::endl;
 	}
 }

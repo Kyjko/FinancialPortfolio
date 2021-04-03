@@ -18,8 +18,8 @@ public:
 	float value;
 	float original_value;
 
-	float GetReturn();
-	double GetLogReturn();
+	float GetReturn() const noexcept;
+	double GetLogReturn() const noexcept;
 	void Reset(const std::optional<float>& val = std::nullopt);
 };
 

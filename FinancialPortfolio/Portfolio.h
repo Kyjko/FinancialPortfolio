@@ -4,6 +4,7 @@
 #include "FX.h"
 #include <random>
 #include <stdint.h>
+#include <fstream>
 
 class Portfolio {
 public:
@@ -11,7 +12,7 @@ public:
 	~Portfolio();
 	
 	void Update();
-	void Print();
+	void Print() noexcept;
 	void Add(const Stock& s);
 	void Add(const FX& fx);
 	void Simulate(uint32_t period);
@@ -19,6 +20,9 @@ public:
 
 	std::vector<Stock> stocks;
 	std::vector<FX> fxs;
+
+	void WriteToFile();
+	void ReadFromFile();
 
 private:
 	std::default_random_engine generator;

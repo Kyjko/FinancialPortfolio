@@ -1,6 +1,5 @@
 #include "Stock.h"
 
-
 Stock::Stock(const std::string& name, float initial_value) : name(name), value(initial_value) {
 	original_value = value;
 }
@@ -15,11 +14,11 @@ void Stock::Print() {
 	std::cout << *this;
 }
 
-float Stock::GetReturn() {
+float Stock::GetReturn() const noexcept { 
 	return value / original_value;
 }
 
-double Stock::GetLogReturn() {
+double Stock::GetLogReturn() const noexcept {
 	return log(value / original_value);
 }
 

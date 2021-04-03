@@ -4,8 +4,28 @@
 #include "FX.h"
 #include <stdint.h>
 
-constexpr unsigned int Str2Int(const char* str, int h = 0) {
+constexpr unsigned int Str2Int(const char* str, int h) {
 	return !str[h] ? 5381 : (Str2Int(str, h + 1) * 33) ^ str[h];
+}
+
+void PrintHelp() noexcept {
+	std::cout << "FinancialPortfolio v0.1" << std::endl;
+	std::cout << "Commands:" << std::endl;
+	std::cout << "\tls - list portfolio" << std::endl;
+	std::cout << "\tclear - clear console" << std::endl;
+	std::cout << "\tupdate - update portfolio once" << std::endl;
+	std::cout << "\tsimulate - enter simulation preparation mode" << std::endl;
+	std::cout << "\t\t<time period> - number of updates to be applied" << std::endl;
+	std::cout << "\tadd stock - enter add stock mode" << std::endl;
+	std::cout << "\t\t<name> - name of stock" << std::endl;
+	std::cout << "\t\t<value> - initial value of stock" << std::endl;
+	std::cout << "\tadd fx - enter add fx mode" << std::endl;
+	std::cout << "\t\t<name> - name of fx" << std::endl;
+	std::cout << "\t\t<rate> - initial rate of fx" << std::endl;
+	std::cout << "\treset - resets all stock and fx values to their original value" << std::endl;
+	std::cout << "\tsave - saves data to datafile" << std::endl;
+	std::cout << "\tget - imports data from datafile" << std::endl;
+	std::cout << "\texit - exits FinancialPortfolio, data will be lost if not backed up" << std::endl;
 }
 
 int main(int argc, char** argv) {
@@ -13,6 +33,8 @@ int main(int argc, char** argv) {
 	bool quit = false;
 	p.stocks.push_back(Stock("STOCK_1", 50));
 	p.stocks.push_back(Stock("STOCK_2", 150));
+	p.fxs.push_back(FX("EURUSD", 1.21));
+	p.fxs.push_back(FX("EURHUF", 360.54));
 	
 	std::string cmd;
 	while (!quit) {
@@ -37,21 +59,7 @@ int main(int argc, char** argv) {
 			break;
 		}
 		case Str2Int("help"): {
-			std::cout << "FinancialPortfolio v0.1" << std::endl;
-			std::cout << "Commands:" << std::endl;
-			std::cout << "\tls - list portfolio" << std::endl;
-			std::cout << "\tclear - clear console" << std::endl;
-			std::cout << "\tupdate - update portfolio once" << std::endl;
-			std::cout << "\tsimulate - enter simulation preparation mode" << std::endl;
-			std::cout << "\t\t<time period> - number of updates to be applied" << std::endl;
-			std::cout << "\tadd stock - enter add stock mode" << std::endl;
-			std::cout << "\t\t<name> - name of stock" << std::endl;
-			std::cout << "\t\t<value> - initial value of stock" << std::endl;
-			std::cout << "\tadd fx - enter add fx mode" << std::endl;
-			std::cout << "\t\t<name> - name of fx" << std::endl;
-			std::cout << "\t\t<rate> - initial rate of fx" << std::endl;
-			std::cout << "\treset - resets all stock and fx values to their original value" << std::endl;
-			std::cout << "\texit - exits FinancialPortfolio, data will be lost if not backed up" << std::endl;
+			PrintHelp();
 			break;
 		}
 		case Str2Int("simulate"): {
@@ -64,13 +72,21 @@ int main(int argc, char** argv) {
 			}
 			catch (const std::invalid_argument& e) {
 				std::cout << e.what() << std::endl;
-				std::cout << "value set to default (" << DEFAULT_TIMEPERIOD_VALUE << ")" << std::endl;
+				std::cout << "value set to default (" << DEFAULT_SIMULATION_TIMEPERIOD_VALUE << ")" << std::endl;
 			}
 			p.Simulate(pr);
 			break;
 		}
 		case Str2Int("reset"): {
 			p.Reset();
+			break;
+		}
+		case Str2Int("save"): {
+			p.WriteToFile();
+			break;
+		}
+		case Str2Int("get"): {
+			p.ReadFromFile();
 			break;
 		}
 		case Str2Int("add stock"): {
@@ -98,7 +114,13 @@ int main(int argc, char** argv) {
 					std::cout << e.what() << std::endl;
 					std::cout << "value set to default (" << DEFAULT_STOCK_VALUE << ")" << std::endl;
 				}
-				p.Add(Stock(name, val));
+				if (val <= 0) {
+					std::cout << "stock value cannot be zero or negative!" << std::endl;
+					break;
+				}
+				else {
+					p.Add(Stock(name, val));
+				}
 			}
 			
 			break;
@@ -128,7 +150,13 @@ int main(int argc, char** argv) {
 					std::cout << e.what() << std::endl;
 					std::cout << "value set to default (" << DEFAULT_FX_VALUE << ")" << std::endl;
 				}
-				p.Add(FX(name, val));
+				if (val <= 0) {
+					std::cout << "fx rate cannot be zero or negative!" << std::endl;
+					break;
+				}
+				else {
+					p.Add(FX(name, val));
+				}
 			}
 			break;
 		}
@@ -136,7 +164,6 @@ int main(int argc, char** argv) {
 			std::cout << "Unknown command!" << std::endl;
 		}
 		}
-		
 	}
 
 	std::cout << "Finished" << std::endl;
