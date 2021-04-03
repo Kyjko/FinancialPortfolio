@@ -38,3 +38,9 @@ void Portfolio::Add(const Stock& s) {
 void Portfolio::Add(const FX& fx) {
 	fxs.push_back(fx);
 }
+ 
+void Portfolio::Simulate(uint32_t period) {
+	for (uint32_t i = 0; i < period; i++) {
+		Update();
+	}
+}
