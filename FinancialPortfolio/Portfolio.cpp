@@ -19,15 +19,26 @@ void Portfolio::Update() {
 	}
 }
 
+void Portfolio::Reset() {
+	for (auto i = stocks.begin(); i != stocks.end(); i++) {
+		i->Reset();
+	}
+	for (auto i = fxs.begin(); i != fxs.end(); i++) {
+		i->Reset();
+	}
+}
+
 void Portfolio::Print() {
 	std::cout << "----Portfolio:----" << std::endl;
 	std::cout << "--Stocks--" << std::endl;
 	for (auto i = stocks.begin(); i != stocks.end(); i++) {
 		i->Print();
+		std::cout << "\tReturn: x" << i->GetReturn() << " (" << i->GetLogReturn()*100.0 << "%)" << std::endl;
 	}
 	std::cout << "--FX--" << std::endl;
 	for (auto i = fxs.begin(); i != fxs.end(); i++) {
 		i->Print();
+		std::cout << "\tReturn: x" << i->GetReturn() << " (" << i->GetLogReturn()*100.0 << "%)" << std::endl;
 	}
 }
 

@@ -15,7 +15,7 @@ public:
 	void Add(const Stock& s);
 	void Add(const FX& fx);
 	void Simulate(uint32_t period);
-	
+	void Reset();
 
 	std::vector<Stock> stocks;
 	std::vector<FX> fxs;

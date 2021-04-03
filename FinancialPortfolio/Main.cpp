@@ -50,6 +50,7 @@ int main(int argc, char** argv) {
 			std::cout << "\tadd fx - enter add fx mode" << std::endl;
 			std::cout << "\t\t<name> - name of fx" << std::endl;
 			std::cout << "\t\t<rate> - initial rate of fx" << std::endl;
+			std::cout << "\treset - resets all stock and fx values to their original value" << std::endl;
 			std::cout << "\texit - exits FinancialPortfolio, data will be lost if not backed up" << std::endl;
 			break;
 		}
@@ -66,6 +67,10 @@ int main(int argc, char** argv) {
 				std::cout << "value set to default (" << DEFAULT_TIMEPERIOD_VALUE << ")" << std::endl;
 			}
 			p.Simulate(pr);
+			break;
+		}
+		case Str2Int("reset"): {
+			p.Reset();
 			break;
 		}
 		case Str2Int("add stock"): {

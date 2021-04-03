@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
+#include <math.h>
 #include <iostream>
+#include <optional>
 
 class Stock {
 public:
@@ -14,6 +16,11 @@ public:
 
 	std::string name;
 	float value;
+	float original_value;
+
+	float GetReturn();
+	double GetLogReturn();
+	void Reset(const std::optional<float>& val = std::nullopt);
 };
 
 

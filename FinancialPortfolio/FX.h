@@ -1,5 +1,5 @@
 #pragma once
-
+#include <optional>
 #include <string>
 #include <iostream>
 
@@ -13,7 +13,13 @@ public:
 
 	friend std::ostream& operator<<(std::ostream& s, const FX& fx);
 
+	void Reset(const std::optional<float>& val = std::nullopt);
+
+	float GetReturn();
+	double GetLogReturn();
+
 	std::string name;
 	float rate;
+	float original_rate;
 };
 
