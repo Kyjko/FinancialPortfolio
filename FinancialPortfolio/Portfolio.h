@@ -5,6 +5,8 @@
 #include <random>
 #include <stdint.h>
 #include <fstream>
+#include "common.h"
+#include <iomanip>
 
 class Portfolio {
 public:

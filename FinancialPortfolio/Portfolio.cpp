@@ -65,7 +65,18 @@ void Portfolio::WriteToFile() {
 		ofile.close();
 	}
 	else {
-		std::cout << "couldn't open datafile!" << std::endl;
+		FILE_OPEN_ERR("data");
+	}
+
+	std::ofstream nameofile("stocksname.fp", std::ios::trunc);
+	if (nameofile.good()) {
+		for (auto i = stocks.begin(); i != stocks.end(); i++) {
+			nameofile << i->name;
+		}
+		nameofile.close();
+	}
+	else {
+		FILE_OPEN_ERR("data");
 	}
 
 	std::ofstream ofile2("fxs.fp", std::ios::trunc);
@@ -76,7 +87,18 @@ void Portfolio::WriteToFile() {
 		ofile2.close();
 	}
 	else {
-		std::cout << "couldn't open datafile!" << std::endl;
+		FILE_OPEN_ERR("data");
+	}
+
+	std::ofstream nameofile2("fxsname.fp", std::ios::trunc);
+	if (nameofile2.good()) {
+		for (auto i = fxs.begin(); i != fxs.end(); i++) {
+			nameofile2 << i->name;
+		}
+		nameofile2.close();
+	}
+	else {
+		FILE_OPEN_ERR("data");
 	}
 	
 }
@@ -93,7 +115,7 @@ void Portfolio::ReadFromFile() {
 		ifile.close();
 	}
 	else {
-		std::cout << "couldn't open datafile!" << std::endl;
+		FILE_OPEN_ERR("data");
 	}
 
 	std::ifstream ifile2("fxs.fp");
@@ -107,6 +129,6 @@ void Portfolio::ReadFromFile() {
 		ifile2.close();
 	}
 	else {
-		std::cout << "couldn't open datafile!" << std::endl;
+		FILE_OPEN_ERR("data");
 	}
 }

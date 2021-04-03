@@ -33,8 +33,8 @@ int main(int argc, char** argv) {
 	bool quit = false;
 	p.stocks.push_back(Stock("STOCK_1", 50));
 	p.stocks.push_back(Stock("STOCK_2", 150));
-	p.fxs.push_back(FX("EURUSD", 1.21));
-	p.fxs.push_back(FX("EURHUF", 360.54));
+	p.fxs.push_back(FX("EURUSD", 1.21f));
+	p.fxs.push_back(FX("EURHUF", 360.54f));
 	
 	std::string cmd;
 	while (!quit) {
