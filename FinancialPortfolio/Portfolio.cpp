@@ -1,5 +1,9 @@
 #include "Portfolio.h"
 
+extern "C" {
+	#include "display.h"
+}
+
 Portfolio::Portfolio(const std::optional<uint16_t>& id) {
 	if (id) {
 		this->id = *id;
@@ -77,14 +81,14 @@ void Portfolio::Graph(const std::string& name, const std::optional<uint32_t>& tp
 	bool fxfound = false;
 	size_t fxpos = 0;
 	for (auto i = stocks.begin(); i != stocks.end(); i++) {
-		if ((i->name).compare(name)) {
+		if ((i->name).compare(name) == 0) {
 			stockfound = true;
 			stockpos = i - stocks.begin();
 			break;
 		}
 	}
 	for (auto i = fxs.begin(); i != fxs.end(); i++) {
-		if ((i->name).compare(name)) {
+		if ((i->name).compare(name) == 0) {
 			fxfound = true;
 			fxpos = i - fxs.begin();
 			break;
@@ -102,9 +106,12 @@ void Portfolio::Graph(const std::string& name, const std::optional<uint32_t>& tp
 		p = DEFAULT_SIMULATION_TIMEPERIOD_VALUE;
 	}
 
+	std::cout << "time period: " << p << std::endl;
+
 	std::vector<float> values;
 
 	if (stockfound) {
+		std::cout << "plotting " << name << " (stock)" << std::endl;
 		Stock s = stocks[stockpos];
 		std::normal_distribution<float> ndist(0.0f, stock_stddev);
 		for (uint32_t i = 0; i < p; i++) {
@@ -113,6 +120,8 @@ void Portfolio::Graph(const std::string& name, const std::optional<uint32_t>& tp
 		}
 	}
 	else if (fxfound) {
+		std::cout << "plotting " << name << " (fx) " << std::endl;
+		std::cout << "plotting fx" << std::endl;
 		std::normal_distribution<float> ndist(0.0f, fx_stddev);
 		FX fx = fxs[fxpos];
 		for (uint32_t i = 0; i < p; i++) {
@@ -133,8 +142,8 @@ void Portfolio::Graph(const std::string& name, const std::optional<uint32_t>& tp
 		FILE_OPEN_ERR("open error");
 	}
 
-	//TODO: do something with the graph data!!!
-
+	_Display(values.data(), values.size());
+	
 }
 
 void Portfolio::ShowParams(const std::optional<std::string>& p) {

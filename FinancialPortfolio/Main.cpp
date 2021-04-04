@@ -53,6 +53,8 @@ void PrintHelp() noexcept {
 	std::cout << "\tbanner - show banner" << std::endl;
 	std::cout << "\tinfo - display portfolio information" << std::endl;
 	std::cout << "\tupdate - update portfolio once" << std::endl;
+	std::cout << "\tplot - enters graph plot mode" << std::endl;
+	std::cout << "\t\t<name> - name of product to be plotted" << std::endl;
 	std::cout << "\tsimulate - enter 'simulation preparation' mode" << std::endl;
 	std::cout << "\t\t<time period> - number of updates to be applied" << std::endl;
 	std::cout << "\tadd stock - enter 'add stock' mode" << std::endl;
@@ -124,6 +126,13 @@ int main(int argc, char** argv) {
 				std::cout << "value set to default (" << DEFAULT_SIMULATION_TIMEPERIOD_VALUE << ")" << std::endl;
 			}
 			p.Simulate(pr);
+			break;
+		}
+		case Str2Int("plot"): {
+			std::cout << "name: " << std::endl;
+			std::string s;
+			std::getline(std::cin, s);
+			p.Graph(s);
 			break;
 		}
 		case Str2Int("reset"): {
