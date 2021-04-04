@@ -174,7 +174,7 @@ int main(int argc, char** argv) {
 			}
 			catch (const std::invalid_argument& e) {
 				std::cout << e.what() << std::endl;
-				std::cout << "value set to default (" << DEFAULT_STOCK_STDDEV_VALUE << ")" << std::endl;
+				std::cout << "value set to default (" << DEFAULT_FX_STDDEV_VALUE << ")" << std::endl;
 			}
 			if (val2 < MINIMAL_FLOAT_VALUE) {
 				std::cout << "standard deviation can only be positive, value set to minimal float value" << std::endl;
