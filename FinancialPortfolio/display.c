@@ -20,10 +20,14 @@ __declspec(noalias) void _Display(const float* __restrict data, const size_t len
 	if (normalized_data == NULL) {
 		return;
 	}
-	float max = 0;
+	float max = 0.0f;
+	float min = 999999999.0f;
 	for (size_t i = 0; i < len; i++) {
 		if (data[i] >= max) {
 			max = data[i];
+		}
+		if (data[i] <= min) {
+			min = data[i];
 		}
 	}
 	
@@ -46,7 +50,7 @@ __declspec(noalias) void _Display(const float* __restrict data, const size_t len
 		
 		SDL_SetRenderDrawColor(r, 180, 255, 0, 255);
 		for (size_t i = 0; i < len - 1; i++) {
-			SDL_RenderDrawLine(r, i * W / len, H / 2 - (normalized_data[i])*100, (i + 1) * W / len, H / 2 - (normalized_data[i+1])*100);
+			SDL_RenderDrawLine(r, i * W / len, H / 2 - (normalized_data[i])*H/4, (i + 1) * W / len, H / 2 - (normalized_data[i+1])*H/4);
 		}
 
 		SDL_SetRenderDrawColor(r, 255, 180, 0, 255);
