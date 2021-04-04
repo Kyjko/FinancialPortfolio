@@ -8,6 +8,14 @@ constexpr unsigned int Str2Int(const char* str, int h) {
 	return !str[h] ? 5381 : (Str2Int(str, h + 1) * 33) ^ str[h];
 }
 
+void Clear() {
+#ifdef __unix__
+	system("clear");
+#elif defined(_WIN32) || defined(_WIN64)
+	system("cls");
+#endif
+}
+
 void PrintHelp() noexcept {
 	std::cout << "FinancialPortfolio v0.1" << std::endl;
 	std::cout << "Commands:" << std::endl;
@@ -51,7 +59,7 @@ int main(int argc, char** argv) {
 			break;
 		}
 		case Str2Int("clear"): {
-			system("cls");
+			Clear();
 			break;
 		}
 		case Str2Int("update"): {
