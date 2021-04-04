@@ -4,6 +4,22 @@
 #include "FX.h"
 #include <stdint.h>
 
+const char* BANNER =
+"_____________________\n"
+"| _________________  |\n"
+"| |              0. ||\n"
+"| |_________________||\n"
+"|  ___ ___ ___   ___ |\n"
+"| | 7 | 8 | 9 | | +| |\n"
+"| |___ | ___ | ___|| |\n"
+"| | 4 | 5 | 6 | | -| |\n"
+"| |___ | ___ | ___|| |\n"
+"| | 1 | 2 | 3 | | x ||\n"
+"| |___ | ___ | ___|| |\n"
+"| | . | 0 | = | | / ||\n"
+"| |___ | ___ | ___| ||\n"
+"|____________________|\n";
+
 constexpr unsigned int Str2Int(const char* str, int h) {
 	return !str[h] ? 5381 : (Str2Int(str, h + 1) * 33) ^ str[h];
 }
@@ -14,6 +30,10 @@ void Clear() noexcept {
 #elif defined(_WIN32) || defined(_WIN64)
 	system("cls");
 #endif
+}
+
+void PrintBanner() noexcept {
+	std::cout << BANNER << std::endl;
 }
 
 void AddInitialEntries(Portfolio& p) {
@@ -30,6 +50,7 @@ void PrintHelp() noexcept {
 	std::cout << "\tclear - clear console" << std::endl;
 	std::cout << "\tset - enter 'set parameters' mode" << std::endl;
 	std::cout << "\tshow params - show parameters and their values" << std::endl;
+	std::cout << "\tbanner - show banner" << std::endl;
 	std::cout << "\tinfo - display portfolio information" << std::endl;
 	std::cout << "\tupdate - update portfolio once" << std::endl;
 	std::cout << "\tsimulate - enter 'simulation preparation' mode" << std::endl;
@@ -51,7 +72,7 @@ int main(int argc, char** argv) {
 	Portfolio p;
 	bool quit = false;
 	AddInitialEntries(p);
-	
+	PrintBanner();
 	std::string cmd;
 	while (!quit) {
 		std::cout << "> ";
@@ -80,6 +101,10 @@ int main(int argc, char** argv) {
 		}
 		case Str2Int("help"): {
 			PrintHelp();
+			break;
+		}
+		case Str2Int("banner"): {
+			PrintBanner();
 			break;
 		}
 		case Str2Int("show params"): {

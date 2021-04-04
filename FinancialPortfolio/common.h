@@ -11,6 +11,7 @@
 constexpr unsigned int Str2Int(const char* str, int h = 0);
 void PrintHelp() noexcept;
 void Clear() noexcept;
+void PrintBanner() noexcept;
 
 #define FILE_OPEN_ERR(type) std::cout << "Error: couldn't open datafile - " << type << std::endl
 #define FILE_REMOVE_ERR(type) std::cout << "Error: couldn't delete datafile - " << type << std::endl
