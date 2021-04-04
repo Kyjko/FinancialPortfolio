@@ -8,12 +8,19 @@ constexpr unsigned int Str2Int(const char* str, int h) {
 	return !str[h] ? 5381 : (Str2Int(str, h + 1) * 33) ^ str[h];
 }
 
-void Clear() {
+void Clear() noexcept {
 #ifdef __unix__
 	system("clear");
 #elif defined(_WIN32) || defined(_WIN64)
 	system("cls");
 #endif
+}
+
+void AddInitialEntries(Portfolio& p) {
+	p.stocks.push_back(Stock("STOCK1", 50));
+	p.stocks.push_back(Stock("STOCK2", 150));
+	p.fxs.push_back(FX("EURUSD", 1.21f));
+	p.fxs.push_back(FX("EURHUF", 360.54f));
 }
 
 void PrintHelp() noexcept {
@@ -33,16 +40,14 @@ void PrintHelp() noexcept {
 	std::cout << "\treset - resets all stock and fx values to their original value" << std::endl;
 	std::cout << "\tsave - saves session data" << std::endl;
 	std::cout << "\tget - imports session data" << std::endl;
+	std::cout << "\tpurge - deletes saved session data" << std::endl;
 	std::cout << "\texit - exits FinancialPortfolio, all unsaved data will be lost - use 'save' to save your session data" << std::endl;
 }
 
 int main(int argc, char** argv) {
 	Portfolio p;
 	bool quit = false;
-	p.stocks.push_back(Stock("STOCK1", 50));
-	p.stocks.push_back(Stock("STOCK2", 150));
-	p.fxs.push_back(FX("EURUSD", 1.21f));
-	p.fxs.push_back(FX("EURHUF", 360.54f));
+	AddInitialEntries(p);
 	
 	std::string cmd;
 	while (!quit) {
@@ -95,6 +100,10 @@ int main(int argc, char** argv) {
 		}
 		case Str2Int("get"): {
 			p.ReadFromFile();
+			break;
+		}
+		case Str2Int("purge"): {
+			p.PurgeSession();
 			break;
 		}
 		case Str2Int("add stock"): {

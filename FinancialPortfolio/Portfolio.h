@@ -25,6 +25,7 @@ public:
 
 	void WriteToFile();
 	void ReadFromFile();
+	void PurgeSession();
 
 private:
 	std::default_random_engine generator;

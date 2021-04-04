@@ -70,7 +70,7 @@ void Portfolio::WriteToFile() {
 		ofile.close();
 	}
 	else {
-		FILE_OPEN_ERR("data");
+		FILE_OPEN_ERR("open error");
 	}
 
 	std::ofstream ofile2("fxs.fp", std::ios::trunc);
@@ -85,7 +85,7 @@ void Portfolio::WriteToFile() {
 		ofile2.close();
 	}
 	else {
-		FILE_OPEN_ERR("data");
+		FILE_OPEN_ERR("open error");
 	}
 	
 }
@@ -117,7 +117,7 @@ void Portfolio::ReadFromFile() {
 		ifile.close();
 	}
 	else {
-		FILE_OPEN_ERR("data");
+		FILE_OPEN_ERR("not found");
 	}
 
 	std::ifstream ifile2("fxs.fp");
@@ -142,6 +142,15 @@ void Portfolio::ReadFromFile() {
 		ifile2.close();
 	}
 	else {
-		FILE_OPEN_ERR("data");
+		FILE_OPEN_ERR("not found");
+	}
+}
+
+void Portfolio::PurgeSession() {
+	if (std::remove("stocks.fp") != 0 || std::remove("fxs.fp") != 0) {
+		FILE_REMOVE_ERR("unknown cause");
+	}
+	else {
+		std::cout << "session data deleted!" << std::endl;
 	}
 }
