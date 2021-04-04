@@ -1,4 +1,4 @@
 # FinancialPortfolio
-A console-based environment to study stocks and forex price behavior
+A console-based environment to study simulated stocks and forex price behavior
 ## Supported platforms:
 * Windows
