@@ -1,6 +1,7 @@
 #pragma once
 #include <optional>
 #include <string>
+#include "common.h"
 #include <iostream>
 
 class FX {

@@ -9,11 +9,11 @@ Portfolio::~Portfolio() {
 }
 
 void Portfolio::Update() {
-	std::normal_distribution<float> ndist(0.0f, 5.0f);
+	std::normal_distribution<float> ndist(0.0f, stock_stddev);
 	for (auto i = stocks.begin(); i != stocks.end(); i++) {
 		i->UpdateValue(ndist(generator));
 	}
-	ndist = std::normal_distribution<float>(0.0f, 2.0f);
+	ndist = std::normal_distribution<float>(0.0f, fx_stddev);
 	for (auto i = fxs.begin(); i != fxs.end(); i++) {
 		i->UpdateValue(ndist(generator));
 	}
@@ -53,6 +53,27 @@ void Portfolio::Add(const FX& fx) {
 void Portfolio::Simulate(uint32_t period) {
 	for (uint32_t i = 0; i < period; i++) {
 		Update();
+	}
+}
+
+void Portfolio::ShowParams(const std::optional<std::string>& p) {
+	if (p) {
+		std::string p1("stock stddev");
+		std::string p2("fx stddev");
+		if (p1.compare(*p)) {
+			std::cout << *p << " = " << stock_stddev << std::endl;
+		}
+		else if (p2.compare(*p)) {
+			std::cout << *p << " = " << fx_stddev << std::endl;
+		}
+		else {
+			std::cout << "unknown parameter!" << std::endl;
+		}
+	}
+	else {
+		std::cout << "Parameters:" << std::endl;
+		std::cout << "\tstock stddev = " << stock_stddev << std::endl;
+		std::cout << "\tfx stddev = " << fx_stddev << std::endl;
 	}
 }
 

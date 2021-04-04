@@ -7,6 +7,8 @@
 #include <fstream>
 #include "common.h"
 #include <sstream>
+#include <optional>
+#include <string>
 
 class Portfolio {
 public:
@@ -19,9 +21,13 @@ public:
 	void Add(const FX& fx);
 	void Simulate(uint32_t period);
 	void Reset();
+	void ShowParams(const std::optional<std::string>& p = std::nullopt);
 
 	std::vector<Stock> stocks;
 	std::vector<FX> fxs;
+
+	float stock_stddev = DEFAULT_STOCK_STDDEV_VALUE;
+	float fx_stddev = DEFAULT_FX_STDDEV_VALUE;
 
 	void WriteToFile();
 	void ReadFromFile();
@@ -29,6 +35,7 @@ public:
 
 private:
 	std::default_random_engine generator;
+
 	
 };
 

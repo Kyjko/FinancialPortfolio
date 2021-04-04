@@ -8,6 +8,9 @@ Stock::~Stock() {}
 
 void Stock::UpdateValue(float change) {
 	value += change;
+	if (value < MINIMAL_FLOAT_VALUE) {
+		value = MINIMAL_FLOAT_VALUE;
+	}
 }
 
 void Stock::Print() {

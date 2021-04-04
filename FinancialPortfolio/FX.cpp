@@ -8,6 +8,9 @@ FX::~FX() {}
 
 void FX::UpdateValue(float change) {
 	rate += change;
+	if (rate < MINIMAL_FLOAT_VALUE) {
+		rate = MINIMAL_FLOAT_VALUE;
+	}
 }
 
 void FX::Print() {

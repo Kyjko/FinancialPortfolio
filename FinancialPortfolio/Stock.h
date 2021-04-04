@@ -2,6 +2,7 @@
 #include <string>
 #include <math.h>
 #include <iostream>
+#include "common.h"
 #include <optional>
 
 class Stock {
