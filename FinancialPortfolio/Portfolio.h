@@ -25,6 +25,7 @@ public:
 	void Reset();
 	void ShowParams(const std::optional<std::string>& p = std::nullopt);
 	void Info() noexcept;
+	void Graph(const std::string& name, const std::optional<uint32_t>& tp = std::nullopt);
 
 	std::vector<Stock> stocks;
 	std::vector<FX> fxs;

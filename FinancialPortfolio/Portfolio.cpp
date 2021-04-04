@@ -8,7 +8,6 @@ Portfolio::Portfolio(const std::optional<uint16_t>& id) {
 	else {
 		this->id = id_count++;
 	}
-
 }
 
 Portfolio::~Portfolio() {
@@ -70,6 +69,72 @@ void Portfolio::Info() noexcept {
 	ShowParams();
 	Print();
 	std::cout << "=================================" << std::endl;
+}
+
+void Portfolio::Graph(const std::string& name, const std::optional<uint32_t>& tp) {
+	bool stockfound = false;
+	size_t stockpos = 0;
+	bool fxfound = false;
+	size_t fxpos = 0;
+	for (auto i = stocks.begin(); i != stocks.end(); i++) {
+		if ((i->name).compare(name)) {
+			stockfound = true;
+			stockpos = i - stocks.begin();
+			break;
+		}
+	}
+	for (auto i = fxs.begin(); i != fxs.end(); i++) {
+		if ((i->name).compare(name)) {
+			fxfound = true;
+			fxpos = i - fxs.begin();
+			break;
+		}
+	}
+	if (!stockfound && !fxfound) {
+		std::cout << "Couldn't find product with name '" << name << "'!" << std::endl;
+		return;
+	}
+	uint32_t p;
+	if (tp) {
+		p = *tp;
+	}
+	else {
+		p = DEFAULT_SIMULATION_TIMEPERIOD_VALUE;
+	}
+
+	std::vector<float> values;
+
+	if (stockfound) {
+		Stock s = stocks[stockpos];
+		std::normal_distribution<float> ndist(0.0f, stock_stddev);
+		for (uint32_t i = 0; i < p; i++) {
+			values.push_back(s.value);
+			s.UpdateValue(ndist(generator));
+		}
+	}
+	else if (fxfound) {
+		std::normal_distribution<float> ndist(0.0f, fx_stddev);
+		FX fx = fxs[fxpos];
+		for (uint32_t i = 0; i < p; i++) {
+			values.push_back(fx.rate);
+			fx.UpdateValue(ndist(generator));
+		}
+	}
+
+	std::ofstream ofile("graphdata.fp", std::ios::trunc);
+	if (ofile.good()) {
+		for (auto i = values.begin(); i != values.end(); i++) {
+			ofile << *i;
+			ofile << '\n';
+		}
+		ofile.close();
+	}
+	else {
+		FILE_OPEN_ERR("open error");
+	}
+
+	//TODO: do something with the graph data!!!
+
 }
 
 void Portfolio::ShowParams(const std::optional<std::string>& p) {
