@@ -23,9 +23,9 @@ void PrintHelp() noexcept {
 	std::cout << "\t\t<name> - name of fx" << std::endl;
 	std::cout << "\t\t<rate> - initial rate of fx" << std::endl;
 	std::cout << "\treset - resets all stock and fx values to their original value" << std::endl;
-	std::cout << "\tsave - saves data to datafile" << std::endl;
-	std::cout << "\tget - imports data from datafile" << std::endl;
-	std::cout << "\texit - exits FinancialPortfolio, data will be lost if not backed up" << std::endl;
+	std::cout << "\tsave - saves session data" << std::endl;
+	std::cout << "\tget - imports session data" << std::endl;
+	std::cout << "\texit - exits FinancialPortfolio, all unsaved data will be lost - use 'save' to save your session data" << std::endl;
 }
 
 int main(int argc, char** argv) {
