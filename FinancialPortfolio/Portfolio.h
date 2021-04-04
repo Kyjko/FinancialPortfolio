@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <fstream>
 #include "common.h"
-#include <iomanip>
+#include <sstream>
 
 class Portfolio {
 public:

@@ -31,8 +31,8 @@ void PrintHelp() noexcept {
 int main(int argc, char** argv) {
 	Portfolio p;
 	bool quit = false;
-	p.stocks.push_back(Stock("STOCK_1", 50));
-	p.stocks.push_back(Stock("STOCK_2", 150));
+	p.stocks.push_back(Stock("STOCK1", 50));
+	p.stocks.push_back(Stock("STOCK2", 150));
 	p.fxs.push_back(FX("EURUSD", 1.21f));
 	p.fxs.push_back(FX("EURHUF", 360.54f));
 	
