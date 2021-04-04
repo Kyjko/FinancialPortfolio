@@ -26,10 +26,11 @@ void AddInitialEntries(Portfolio& p) {
 void PrintHelp() noexcept {
 	std::cout << "FinancialPortfolio v0.1" << std::endl;
 	std::cout << "Commands:" << std::endl;
-	std::cout << "\tls - list portfolio" << std::endl;
+	std::cout << "\tls - list portfolio contents" << std::endl;
 	std::cout << "\tclear - clear console" << std::endl;
 	std::cout << "\tset - enter 'set parameters' mode" << std::endl;
 	std::cout << "\tshow params - show parameters and their values" << std::endl;
+	std::cout << "\tinfo - display portfolio information" << std::endl;
 	std::cout << "\tupdate - update portfolio once" << std::endl;
 	std::cout << "\tsimulate - enter 'simulation preparation' mode" << std::endl;
 	std::cout << "\t\t<time period> - number of updates to be applied" << std::endl;
@@ -71,6 +72,10 @@ int main(int argc, char** argv) {
 		}
 		case Str2Int("update"): {
 			p.Update();
+			break;
+		}
+		case Str2Int("info"): {
+			p.Info();
 			break;
 		}
 		case Str2Int("help"): {

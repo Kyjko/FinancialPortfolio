@@ -10,9 +10,11 @@
 #include <optional>
 #include <string>
 
+static uint16_t id_count = 1;
+
 class Portfolio {
 public:
-	Portfolio();
+	Portfolio(const std::optional<uint16_t>& id = std::nullopt);
 	~Portfolio();
 	
 	void Update();
@@ -22,9 +24,12 @@ public:
 	void Simulate(uint32_t period);
 	void Reset();
 	void ShowParams(const std::optional<std::string>& p = std::nullopt);
+	void Info() noexcept;
 
 	std::vector<Stock> stocks;
 	std::vector<FX> fxs;
+
+	uint16_t id;
 
 	float stock_stddev = DEFAULT_STOCK_STDDEV_VALUE;
 	float fx_stddev = DEFAULT_FX_STDDEV_VALUE;

@@ -1,6 +1,14 @@
 #include "Portfolio.h"
 
-Portfolio::Portfolio() {
+Portfolio::Portfolio(const std::optional<uint16_t>& id) {
+	if (id) {
+		this->id = *id;
+		id_count = *id + 1;
+	}
+	else {
+		this->id = id_count++;
+	}
+
 }
 
 Portfolio::~Portfolio() {
@@ -54,6 +62,14 @@ void Portfolio::Simulate(uint32_t period) {
 	for (uint32_t i = 0; i < period; i++) {
 		Update();
 	}
+}
+
+void Portfolio::Info() noexcept {
+	std::cout << "=====|Portfolio information|=====" << std::endl;
+	std::cout << "id: " << id << std::endl;
+	ShowParams();
+	Print();
+	std::cout << "=================================" << std::endl;
 }
 
 void Portfolio::ShowParams(const std::optional<std::string>& p) {
