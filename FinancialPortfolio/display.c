@@ -26,8 +26,8 @@ __declspec(noalias) void _Display(const float* __restrict data, const size_t len
 		SDL_SetRenderDrawColor(r, 0, 0, 0, 0);
 		SDL_RenderClear(r);
 		SDL_SetRenderDrawColor(r, 70, 255, 0, 255);
-		for (size_t i = 0; i < len-1; i++) {
-			SDL_RenderDrawLine(r, i * W / len, H / 2 - data[i], (i + 1) * W / len, H / 2 - data[i + 1]);
+		for (size_t i = 0; i < len-2; i++) {
+			SDL_RenderDrawLine(r, i * W / len, H / 2 - (data[i+1] - data[i])*50, (i + 1) * W / len, H / 2 - (data[i+2] - data[i+1])*50);
 		}
 
 		SDL_RenderPresent(r);
