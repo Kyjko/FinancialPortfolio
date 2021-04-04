@@ -1,5 +1,8 @@
 #include "display.h"
 
+#pragma warning(disable : 6386)
+#pragma warning(disable : 6385)
+
 __declspec(noalias) void _Display(const float* __restrict data, const size_t len) {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		return;
@@ -25,11 +28,16 @@ __declspec(noalias) void _Display(const float* __restrict data, const size_t len
 		}
 		SDL_SetRenderDrawColor(r, 0, 0, 0, 0);
 		SDL_RenderClear(r);
-		SDL_SetRenderDrawColor(r, 70, 255, 0, 255);
-		for (size_t i = 0; i < len-2; i++) {
-			SDL_RenderDrawLine(r, i * W / len, H / 2 - (data[i+1] - data[i])*50, (i + 1) * W / len, H / 2 - (data[i+2] - data[i+1])*50);
+		
+		SDL_SetRenderDrawColor(r, 180, 255, 0, 255);
+		for (size_t i = 0; i < len - 1; i++) {
+			SDL_RenderDrawLine(r, i * W / len, H / 2 - (data[i])*2, (i + 1) * W / len, H / 2 - (data[i+1])*2);
 		}
 
+		SDL_SetRenderDrawColor(r, 255, 180, 0, 255);
+		for (size_t i = 0; i < len - 2; i++) {
+			SDL_RenderDrawLine(r, i * W / len, 3 * H / 4 - (data[i + 1] - data[i]) * 50, (i + 1) * W / len, 3 * H / 4 - (data[i + 2] - data[i + 1]) * 50);
+		}
 		SDL_RenderPresent(r);
 	}
 
