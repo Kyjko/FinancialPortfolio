@@ -80,6 +80,7 @@ int main(int argc, char** argv) {
 
 	AddInitialEntries(p);
 	PrintBanner();
+	std::cout << "type 'help' or '?' to display help" << std::endl;
 	std::string cmd;
 	while (!quit) {
 		std::cout << "> ";
@@ -106,6 +107,10 @@ int main(int argc, char** argv) {
 			break;
 		}
 		case Str2Int("help"): {
+			PrintHelp();
+			break;
+		}
+		case Str2Int("?"): {
 			PrintHelp();
 			break;
 		}

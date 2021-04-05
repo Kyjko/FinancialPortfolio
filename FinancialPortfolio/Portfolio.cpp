@@ -252,7 +252,7 @@ void Portfolio::Graph(const std::string& name, const std::optional<uint32_t>& tp
 		FILE_OPEN_ERR("open error");
 	}
 
-	_Display(values.data(), values.size());
+	_Display(values.data(), values.size(), DEFAULT_FIGUREWINDOW_WIDTH, DEFAULT_FIGUREWINDOW_HEIGHT);
 }
 
 void Portfolio::ShowParams(const std::optional<std::string>& p) {

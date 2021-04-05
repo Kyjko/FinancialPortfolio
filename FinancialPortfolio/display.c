@@ -3,7 +3,7 @@
 #pragma warning(disable : 6386)
 #pragma warning(disable : 6385)
 
-__declspec(noalias) void _Display(const float* __restrict data, const size_t len) {
+__declspec(noalias) void _Display(const float* __restrict data, const size_t len, const int W, const int H) {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		return;
 	}
@@ -38,7 +38,7 @@ __declspec(noalias) void _Display(const float* __restrict data, const size_t len
 	short quit = 0;
 	while (quit != 1) {
 		SDL_Event e;
-		while (SDL_PollEvent(&e) != NULL) {
+		while (SDL_PollEvent(&e) != 0) {
 			switch (e.type) {
 			case SDL_QUIT:
 				quit = 1;

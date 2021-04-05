@@ -8,6 +8,9 @@
 
 #define MINIMAL_FLOAT_VALUE 0.000000001f
 
+#define DEFAULT_FIGUREWINDOW_WIDTH 1000
+#define DEFAULT_FIGUREWINDOW_HEIGHT 1000
+
 constexpr unsigned int Str2Int(const char* str, int h = 0);
 void PrintHelp() noexcept;
 void Clear() noexcept;
