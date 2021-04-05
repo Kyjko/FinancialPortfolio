@@ -71,8 +71,9 @@ void PrintHelp() noexcept {
 }
 
 int main(int argc, char** argv) {
-	Portfolio p;
 	bool quit = false;
+
+	Portfolio p;
 	AddInitialEntries(p);
 	PrintBanner();
 	std::string cmd;
