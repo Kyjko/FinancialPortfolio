@@ -14,7 +14,13 @@ static uint16_t id_count = 1;
 
 class Portfolio {
 public:
-	Portfolio(const std::optional<uint16_t>& id = std::nullopt);
+	enum class DistributionTypes {
+		NormalDistribution,
+		CauchyDistribution,
+		LognormalDistribution
+	};
+
+	Portfolio(const DistributionTypes& dist_type, const std::optional<uint16_t>& id = std::nullopt);
 	~Portfolio();
 	
 	void Update();
@@ -26,9 +32,14 @@ public:
 	void ShowParams(const std::optional<std::string>& p = std::nullopt);
 	void Info() noexcept;
 	void Graph(const std::string& name, const std::optional<uint32_t>& tp = std::nullopt);
+	void ShowDistributionType();
+
+	void SetDistribution(const DistributionTypes& dist_type);
 
 	std::vector<Stock> stocks;
 	std::vector<FX> fxs;
+
+	DistributionTypes random_distribution;
 
 	uint16_t id;
 

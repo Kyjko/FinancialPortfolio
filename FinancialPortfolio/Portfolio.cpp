@@ -4,7 +4,8 @@ extern "C" {
 	#include "display.h"
 }
 
-Portfolio::Portfolio(const std::optional<uint16_t>& id) {
+Portfolio::Portfolio(const DistributionTypes& dist_type, const std::optional<uint16_t>& id) {
+	random_distribution = dist_type;
 	if (id) {
 		this->id = *id;
 		id_count = *id + 1;
@@ -17,20 +18,82 @@ Portfolio::Portfolio(const std::optional<uint16_t>& id) {
 Portfolio::~Portfolio() {
 	stocks = std::vector<Stock>();
 	fxs = std::vector<FX>();
+	std::ifstream f("graphdata.fp");
+	if (f.good()) {
+		f.close();
+		if (std::remove("graphdata.fp") != 0) {
+			FILE_REMOVE_ERR("unknown error");
+		}
+		
+	}
+	std::cout << "Exited portfolio (id: " << id << ")" << std::endl;
+}
+
+void Portfolio::SetDistribution(const DistributionTypes& dist_type) {
+	random_distribution = dist_type;
 }
 
 void Portfolio::Update() {
-	std::normal_distribution<float> ndist(0.0f, stock_stddev);
-	for (auto i = stocks.begin(); i != stocks.end(); i++) {
-		i->UpdateValue(ndist(generator));
+	switch(random_distribution) {
+	case DistributionTypes::NormalDistribution: {
+		std::normal_distribution<float> ndist(0.0f, stock_stddev);
+		for (auto i = stocks.begin(); i != stocks.end(); i++) {
+			i->UpdateValue(ndist(generator));
+		}
+		ndist = std::normal_distribution<float>(0.0f, fx_stddev);
+		for (auto i = fxs.begin(); i != fxs.end(); i++) {
+			i->UpdateValue(ndist(generator));
+		}
+		break;
 	}
-	ndist = std::normal_distribution<float>(0.0f, fx_stddev);
-	for (auto i = fxs.begin(); i != fxs.end(); i++) {
-		i->UpdateValue(ndist(generator));
+	case DistributionTypes::LognormalDistribution: {
+		std::lognormal_distribution<float> ndist(0.0f, stock_stddev);
+		for (auto i = stocks.begin(); i != stocks.end(); i++) {
+			i->UpdateValue(ndist(generator));
+		}
+		ndist = std::lognormal_distribution<float>(0.0f, fx_stddev);
+		for (auto i = fxs.begin(); i != fxs.end(); i++) {
+			i->UpdateValue(ndist(generator));
+		}
+		break;
+	}
+	case DistributionTypes::CauchyDistribution: {
+		std::cauchy_distribution<float> ndist(0.0f, stock_stddev);
+		for (auto i = stocks.begin(); i != stocks.end(); i++) {
+			i->UpdateValue(ndist(generator));
+		}
+		ndist = std::cauchy_distribution<float>(0.0f, fx_stddev);
+		for (auto i = fxs.begin(); i != fxs.end(); i++) {
+			i->UpdateValue(ndist(generator));
+		}
+		break;
+	}
+	default: {break; }
+	}
+}
+
+void Portfolio::ShowDistributionType() {
+	switch (random_distribution) {
+	case DistributionTypes::NormalDistribution: {
+		std::cout << "distribution: normal distribution" << std::endl;
+		break;
+	}
+	case DistributionTypes::LognormalDistribution: {
+		std::cout << "distribution: lognormal distribution" << std::endl;
+		break;
+	}
+	case DistributionTypes::CauchyDistribution: {
+		std::cout << "distribution: cauchy distribution" << std::endl;
+		break;
+	}
+	default: {break; }
 	}
 }
 
 void Portfolio::Reset() {
+	stock_stddev = DEFAULT_STOCK_STDDEV_VALUE;
+	fx_stddev = DEFAULT_FX_STDDEV_VALUE;
+	random_distribution = DistributionTypes::NormalDistribution;
 	for (auto i = stocks.begin(); i != stocks.end(); i++) {
 		i->Reset();
 	}
@@ -70,6 +133,7 @@ void Portfolio::Simulate(uint32_t period) {
 void Portfolio::Info() noexcept {
 	std::cout << "=====|Portfolio information|=====" << std::endl;
 	std::cout << "id: " << id << std::endl;
+	ShowDistributionType();
 	ShowParams();
 	Print();
 	std::cout << "=================================" << std::endl;
@@ -113,20 +177,66 @@ void Portfolio::Graph(const std::string& name, const std::optional<uint32_t>& tp
 	if (stockfound) {
 		std::cout << "plotting " << name << " (stock)" << std::endl;
 		Stock s = stocks[stockpos];
-		std::normal_distribution<float> ndist(0.0f, stock_stddev);
-		for (uint32_t i = 0; i < p; i++) {
-			values.push_back(s.value);
-			s.UpdateValue(ndist(generator));
+
+		switch (random_distribution) {
+		case DistributionTypes::NormalDistribution: {
+			std::normal_distribution<float> ndist(0.0f, stock_stddev);
+			for (uint32_t i = 0; i < p; i++) {
+				values.push_back(s.value);
+				s.UpdateValue(ndist(generator));
+			}
+			break;
+		}
+		case DistributionTypes::LognormalDistribution: {
+			std::lognormal_distribution<float> ndist(0.0f, stock_stddev);
+			for (uint32_t i = 0; i < p; i++) {
+				values.push_back(s.value);
+				s.UpdateValue(ndist(generator));
+			}
+			break;
+		}
+		case DistributionTypes::CauchyDistribution: {
+			std::cauchy_distribution<float> ndist(0.0f, stock_stddev);
+			for (uint32_t i = 0; i < p; i++) {
+				values.push_back(s.value);
+				s.UpdateValue(ndist(generator));
+			}
+			break;
+		}
+		default: {}
 		}
 	}
 	else if (fxfound) {
 		std::cout << "plotting " << name << " (fx) " << std::endl;
 		std::cout << "plotting fx" << std::endl;
-		std::normal_distribution<float> ndist(0.0f, fx_stddev);
 		FX fx = fxs[fxpos];
-		for (uint32_t i = 0; i < p; i++) {
-			values.push_back(fx.rate);
-			fx.UpdateValue(ndist(generator));
+
+		switch (random_distribution) {
+		case DistributionTypes::NormalDistribution: {
+			std::normal_distribution<float> ndist(0.0f, fx_stddev);
+			for (uint32_t i = 0; i < p; i++) {
+				values.push_back(fx.rate);
+				fx.UpdateValue(ndist(generator));
+			}
+			break;
+		}
+		case DistributionTypes::LognormalDistribution: {
+			std::lognormal_distribution<float> ndist(0.0f, fx_stddev);
+			for (uint32_t i = 0; i < p; i++) {
+				values.push_back(fx.rate);
+				fx.UpdateValue(ndist(generator));
+			}
+			break;
+		}
+		case DistributionTypes::CauchyDistribution: {
+			std::cauchy_distribution<float> ndist(0.0f, fx_stddev);
+			for (uint32_t i = 0; i < p; i++) {
+				values.push_back(fx.rate);
+				fx.UpdateValue(ndist(generator));
+			}
+			break;
+		}
+		default: {break; }
 		}
 	}
 

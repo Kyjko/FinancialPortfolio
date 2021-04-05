@@ -36,11 +36,11 @@ void PrintBanner() noexcept {
 	std::cout << BANNER << std::endl;
 }
 
-void AddInitialEntries(Portfolio& p) {
-	p.stocks.push_back(Stock("STOCK1", 50));
-	p.stocks.push_back(Stock("STOCK2", 150));
-	p.fxs.push_back(FX("EURUSD", 1.21f));
-	p.fxs.push_back(FX("EURHUF", 360.54f));
+void AddInitialEntries(std::unique_ptr<Portfolio>& p) {
+	p->stocks.push_back(Stock("STOCK1", 50));
+	p->stocks.push_back(Stock("STOCK2", 150));
+	p->fxs.push_back(FX("EURUSD", 1.21f));
+	p->fxs.push_back(FX("EURHUF", 360.54f));
 }
 
 void PrintHelp() noexcept {
@@ -49,7 +49,9 @@ void PrintHelp() noexcept {
 	std::cout << "\tls - list portfolio contents" << std::endl;
 	std::cout << "\tclear - clear console" << std::endl;
 	std::cout << "\tset - enter 'set parameters' mode" << std::endl;
+	std::cout << "\tset distribution - enter 'set distribution' mode" << std::endl;
 	std::cout << "\tshow params - show parameters and their values" << std::endl;
+	std::cout << "\tshow distribution - show distribution type" << std::endl;
 	std::cout << "\tbanner - show banner" << std::endl;
 	std::cout << "\tinfo - display portfolio information" << std::endl;
 	std::cout << "\tupdate - update portfolio once" << std::endl;
@@ -71,9 +73,11 @@ void PrintHelp() noexcept {
 }
 
 int main(int argc, char** argv) {
+	
+	std::unique_ptr<Portfolio> p = std::make_unique<Portfolio>(Portfolio::DistributionTypes::NormalDistribution);
+	
 	bool quit = false;
 
-	Portfolio p;
 	AddInitialEntries(p);
 	PrintBanner();
 	std::string cmd;
@@ -82,12 +86,11 @@ int main(int argc, char** argv) {
 		std::getline(std::cin, cmd);
 		switch (Str2Int(cmd.c_str())) {
 		case Str2Int("exit"): {
-			std::cout << "Bye" << std::endl;
 			quit = true;
 			break;
 		}
 		case Str2Int("ls"): {
-			p.Print();
+			p->Print();
 			break;
 		}
 		case Str2Int("clear"): {
@@ -95,11 +98,11 @@ int main(int argc, char** argv) {
 			break;
 		}
 		case Str2Int("update"): {
-			p.Update();
+			p->Update();
 			break;
 		}
 		case Str2Int("info"): {
-			p.Info();
+			p->Info();
 			break;
 		}
 		case Str2Int("help"): {
@@ -111,7 +114,45 @@ int main(int argc, char** argv) {
 			break;
 		}
 		case Str2Int("show params"): {
-			p.ShowParams();
+			p->ShowParams();
+			break;
+		}
+		case Str2Int("show distribution"): {
+			p->ShowDistributionType();
+			break;
+		}
+		case Str2Int("set distribution"): {
+			std::cout << "distribution type (normal-0, lognormal-1, cauchy-2):" << std::endl;
+			std::string s;
+			std::getline(std::cin, s);
+			int val = 0;
+			try {
+				val = std::stoi(s);
+			}
+			catch (const std::invalid_argument& e) {
+				std::cout << e.what() << std::endl;
+				std::cout << "distribution identifier can only be integer!" << std::endl;
+				break;
+			}
+			switch (val) {
+			case 0: {
+				p->random_distribution = Portfolio::DistributionTypes::NormalDistribution;
+				break;
+			}
+			case 1: {
+				p->random_distribution = Portfolio::DistributionTypes::LognormalDistribution;
+				break;
+			}
+			case 2: {
+				p->random_distribution = Portfolio::DistributionTypes::CauchyDistribution;
+				break;
+			}
+			default: {
+				std::cout << "Invalid identifier! Portfolio distribution set to default (normal)" << std::endl;
+				p->random_distribution = Portfolio::DistributionTypes::NormalDistribution;
+				break;
+			}
+			}
 			break;
 		}
 		case Str2Int("simulate"): {
@@ -126,30 +167,30 @@ int main(int argc, char** argv) {
 				std::cout << e.what() << std::endl;
 				std::cout << "value set to default (" << DEFAULT_SIMULATION_TIMEPERIOD_VALUE << ")" << std::endl;
 			}
-			p.Simulate(pr);
+			p->Simulate(pr);
 			break;
 		}
 		case Str2Int("plot"): {
 			std::cout << "name: " << std::endl;
 			std::string s;
 			std::getline(std::cin, s);
-			p.Graph(s);
+			p->Graph(s);
 			break;
 		}
 		case Str2Int("reset"): {
-			p.Reset();
+			p->Reset();
 			break;
 		}
 		case Str2Int("save"): {
-			p.WriteToFile();
+			p->WriteToFile();
 			break;
 		}
 		case Str2Int("get"): {
-			p.ReadFromFile();
+			p->ReadFromFile();
 			break;
 		}
 		case Str2Int("purge"): {
-			p.PurgeSession();
+			p->PurgeSession();
 			break;
 		}
 		case Str2Int("add stock"): {
@@ -182,7 +223,7 @@ int main(int argc, char** argv) {
 					break;
 				}
 				else {
-					p.Add(Stock(name, val));
+					p->Add(Stock(name, val));
 				}
 			}
 			
@@ -204,7 +245,7 @@ int main(int argc, char** argv) {
 				std::cout << "standard deviation can only be positive, value set to minimal float value" << std::endl;
 				val = MINIMAL_FLOAT_VALUE;
 			}
-			p.stock_stddev = val;
+			p->stock_stddev = val;
 			std::cout << "fx stddev:" << std::endl;
 			std::string s2;
 			std::getline(std::cin, s2);
@@ -220,7 +261,7 @@ int main(int argc, char** argv) {
 				std::cout << "standard deviation can only be positive, value set to minimal float value" << std::endl;
 				val2 = MINIMAL_FLOAT_VALUE;
 			}
-			p.fx_stddev = val2;
+			p->fx_stddev = val2;
 			break;
 		}
 		case Str2Int("add fx"): {
@@ -253,18 +294,19 @@ int main(int argc, char** argv) {
 					break;
 				}
 				else {
-					p.Add(FX(name, val));
+					p->Add(FX(name, val));
 				}
 			}
 			break;
 		}
 		default: {
 			std::cout << "Unknown command!" << std::endl;
+			break;
 		}
 		}
 	}
 
-	std::cout << "Finished" << std::endl;
+	std::cout << "Bye." << std::endl;
 	
 	return 0;
 }
