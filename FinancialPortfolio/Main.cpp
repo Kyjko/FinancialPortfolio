@@ -182,11 +182,11 @@ int main(int argc, char** argv) {
 			break;
 		}
 		case Str2Int("save"): {
-			p->WriteToFile();
+			p->WriteToFile(p->stocks, p->fxs);
 			break;
 		}
 		case Str2Int("get"): {
-			p->ReadFromFile();
+			p->ReadFromFile(p->stocks, p->fxs);
 			break;
 		}
 		case Str2Int("purge"): {

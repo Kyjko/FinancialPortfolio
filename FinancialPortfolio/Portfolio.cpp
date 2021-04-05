@@ -253,7 +253,6 @@ void Portfolio::Graph(const std::string& name, const std::optional<uint32_t>& tp
 	}
 
 	_Display(values.data(), values.size());
-	
 }
 
 void Portfolio::ShowParams(const std::optional<std::string>& p) {
@@ -277,94 +276,109 @@ void Portfolio::ShowParams(const std::optional<std::string>& p) {
 	}
 }
 
-void Portfolio::WriteToFile() {
+void Portfolio::WriteToFile(const std::vector<Stock>& stocks, const std::vector<FX>& fxs) {
 	std::ofstream ofile("stocks.fp", std::ios::trunc);
-	if (ofile.good()) {
-		for (auto i = stocks.begin(); i != stocks.end(); i++) {
-			ofile << i->name;
-			ofile << ',';
-			//ofile.write((const char*)&(i->value), sizeof(float));
-			ofile << i->value;
-			ofile << ",\n";
-
-		}
-		ofile.close();
-	}
-	else {
-		FILE_OPEN_ERR("open error");
-	}
-
 	std::ofstream ofile2("fxs.fp", std::ios::trunc);
-	if (ofile2.good()) {
-		for (auto i = fxs.begin(); i != fxs.end(); i++) {
-			ofile2 << i->name;
-			ofile2 << ',';
-			ofile2 << i->rate;
-			//ofile2.write((const char*)&(i->rate), sizeof(float));
-			ofile2 << ",\n";
+
+	std::thread s_thread([&ofile, stocks] {
+		if (ofile.good()) {
+			for (auto i = stocks.begin(); i != stocks.end(); i++) {
+				ofile << i->name;
+				ofile << ',';
+				ofile << i->value;
+				ofile << ",\n";
+			}
+			ofile.close();
 		}
-		ofile2.close();
-	}
-	else {
-		FILE_OPEN_ERR("open error");
-	}
+		else {
+			FILE_OPEN_ERR("open error");
+		}
+	});
+	
+	std::thread f_thread([&ofile2, fxs] {
+		if (ofile2.good()) {
+			for (auto i = fxs.begin(); i != fxs.end(); i++) {
+				ofile2 << i->name;
+				ofile2 << ',';
+				ofile2 << i->rate;
+				ofile2 << ",\n";
+			}
+			ofile2.close();
+		}
+		else {
+			FILE_OPEN_ERR("open error");
+		}
+	});
+	
+	s_thread.join();
+	f_thread.join();
 	
 }
 
-void Portfolio::ReadFromFile() {
+void Portfolio::ReadFromFile(std::vector<Stock>& stocks, std::vector<FX>& fxs) {
 
 	stocks.clear();
 	fxs.clear();
 
 	std::ifstream ifile("stocks.fp");
-	if (ifile.good()) {		
-		std::string line;
-		while (std::getline(ifile, line)) {
-			std::stringstream ss(line);
-			std::string name, svalue;
-			std::getline(ss, name, ',');
-			std::getline(ss, svalue, ',');
-			float value = 1.0f;
-			try {
-				value = std::stof(svalue);
-			}
-			catch (const std::invalid_argument& e) {
-				std::cout << e.what();
-				std::cout << "error in file format, float value will be set to default (1.0)" << std::endl;
-			}
-			stocks.push_back(Stock(name, value));
-		}
-
-		ifile.close();
-	}
-	else {
-		FILE_OPEN_ERR("not found");
-	}
-
 	std::ifstream ifile2("fxs.fp");
-	if (ifile2.good()) {
-		std::string line;
-		while (std::getline(ifile2, line)) {
-			std::stringstream ss(line);
-			std::string name, srate;
-			std::getline(ss, name, ',');
-			std::getline(ss, srate, ',');
-			float rate = 1.0f;
-			try {
-				rate = std::stof(srate);
-			}
-			catch (const std::invalid_argument& e) {
-				std::cout << e.what();
-				std::cout << "error in file format, float value will be set to default (1.0)" << std::endl;
-			}
-			fxs.push_back(FX(name, rate));
-		}
 
-		ifile2.close();
-	}
-	else {
-		FILE_OPEN_ERR("not found");
-	}
+	std::thread s_thread([&ifile, &stocks] {
+		if (ifile.good()) {
+			std::string line;
+			while (std::getline(ifile, line)) {
+				std::stringstream ss(line);
+				std::string name, svalue;
+				std::getline(ss, name, ',');
+				std::getline(ss, svalue, ',');
+				float value = 1.0f;
+				try {
+					value = std::stof(svalue);
+				}
+				catch (const std::invalid_argument& e) {
+					std::cout << e.what();
+					std::cout << "error in file format, float value will be set to default (1.0)" << std::endl;
+				}
+				stocks.push_back(Stock(name, value));
+			}
+
+			ifile.close();
+		}
+		else {
+			FILE_OPEN_ERR("not found");
+		}
+	});
+
+	std::thread f_thread([&ifile2, &fxs] {
+		if (ifile2.good()) {
+			std::string line;
+			while (std::getline(ifile2, line)) {
+				std::stringstream ss(line);
+				std::string name, srate;
+				std::getline(ss, name, ',');
+				std::getline(ss, srate, ',');
+				float rate = 1.0f;
+				try {
+					rate = std::stof(srate);
+				}
+				catch (const std::invalid_argument& e) {
+					std::cout << e.what();
+					std::cout << "error in file format, float value will be set to default (1.0)" << std::endl;
+				}
+				fxs.push_back(FX(name, rate));
+			}
+
+			ifile2.close();
+		}
+		else {
+			FILE_OPEN_ERR("not found");
+		}
+	});
+
+	s_thread.join();
+	f_thread.join();
+
+	
 }
 
 void Portfolio::PurgeSession() {

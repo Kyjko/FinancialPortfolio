@@ -9,6 +9,7 @@
 #include <sstream>
 #include <optional>
 #include <string>
+#include <thread>
 
 static uint16_t id_count = 1;
 
@@ -46,8 +47,8 @@ public:
 	float stock_stddev = DEFAULT_STOCK_STDDEV_VALUE;
 	float fx_stddev = DEFAULT_FX_STDDEV_VALUE;
 
-	void WriteToFile();
-	void ReadFromFile();
+	void WriteToFile(const std::vector<Stock>& stocks, const std::vector<FX>& fxs);
+	void ReadFromFile(std::vector<Stock>& stocks, std::vector<FX>& fxs);
 	void PurgeSession();
 
 private:
