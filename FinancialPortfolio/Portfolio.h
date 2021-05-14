@@ -39,6 +39,8 @@ public:
 	std::pair<float, float> GetReturn() const noexcept;
 	std::pair<float, float> GetStddev() const noexcept;
 
+	void AdjustWeights() noexcept;
+
 	void SetDistribution(const DistributionTypes& dist_type);
 
 	std::vector<Stock> stocks;

@@ -118,10 +118,12 @@ void Portfolio::Print() noexcept {
 
 void Portfolio::Add(const Stock& s) {
 	stocks.push_back(s);
+	AdjustWeights();
 }
 
 void Portfolio::Add(const FX& fx) {
 	fxs.push_back(fx);
+	AdjustWeights();
 }
  
 void Portfolio::Simulate(uint32_t period) {
@@ -381,6 +383,19 @@ void Portfolio::ReadFromFile(std::vector<Stock>& stocks, std::vector<FX>& fxs) {
 	
 }
 
+void Portfolio::AdjustWeights() noexcept {
+	uint32_t stocksize = stocks.size();
+	uint32_t fxsize = fxs.size();
+	for (auto i = stocks.begin(); i != stocks.end(); i++) {
+		i->weight = 1;
+		i->weight /= stocksize;
+	}
+	for (auto i = fxs.begin(); i != fxs.end(); i++) {
+		i->weight = 1;
+		i->weight /= fxsize;
+	}
+}
+
 void Portfolio::PurgeSession() {
 	if (std::remove("stocks.fp") != 0 || std::remove("fxs.fp") != 0) {
 		FILE_REMOVE_ERR("unknown cause");
@@ -399,8 +414,8 @@ std::pair<float, float> Portfolio::GetReturn() const noexcept {
 		fr += i->weight * i->GetReturn();
 	}
 
-	return std::make_pair(sr/stocks.size(), fr/stocks.size());
+	return std::make_pair(sr, fr);
 }
 std::pair<float, float> Portfolio::GetStddev() const noexcept {
-
+	// TODO: Covariance matrix!!
 }

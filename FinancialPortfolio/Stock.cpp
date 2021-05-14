@@ -35,6 +35,6 @@ void Stock::Reset(const std::optional<float>& val) {
 }
 
 std::ostream& operator<<(std::ostream& s, const Stock& st) {
-	s << st.name << " - " << st.value << std::endl;
+	s << st.name << " - " << st.value << "(weight: " << st.weight << ")" << std::endl;
 	return s;
 }
