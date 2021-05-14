@@ -386,13 +386,18 @@ void Portfolio::ReadFromFile(std::vector<Stock>& stocks, std::vector<FX>& fxs) {
 void Portfolio::AdjustWeights() noexcept {
 	uint32_t stocksize = stocks.size();
 	uint32_t fxsize = fxs.size();
-	for (auto i = stocks.begin(); i != stocks.end(); i++) {
-		i->weight = 1;
-		i->weight /= stocksize;
+	
+	if (stocksize > 0) {
+		for (auto i = stocks.begin(); i != stocks.end(); i++) {
+			i->weight = 1;
+			i->weight /= stocksize;
+		}
 	}
-	for (auto i = fxs.begin(); i != fxs.end(); i++) {
-		i->weight = 1;
-		i->weight /= fxsize;
+	if (fxsize > 0) {
+		for (auto i = fxs.begin(); i != fxs.end(); i++) {
+			i->weight = 1;
+			i->weight /= fxsize;
+		}
 	}
 }
 
