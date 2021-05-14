@@ -7,7 +7,7 @@
 class FX {
 public:
 	FX();
-	FX(const std::string& name, float rate);
+	FX(const std::string& name, float rate, float weight);
 	~FX();
 	void UpdateValue(float change);
 	void Print();
@@ -22,5 +22,6 @@ public:
 	std::string name;
 	float rate;
 	float original_rate;
+	float weight;
 };
 

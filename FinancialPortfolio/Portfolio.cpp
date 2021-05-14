@@ -339,7 +339,7 @@ void Portfolio::ReadFromFile(std::vector<Stock>& stocks, std::vector<FX>& fxs) {
 					std::cout << e.what();
 					std::cout << "error in file format, float value will be set to default (1.0)" << std::endl;
 				}
-				stocks.push_back(Stock(name, value));
+				stocks.push_back(Stock(name, value, 1));
 			}
 
 			ifile.close();
@@ -365,7 +365,7 @@ void Portfolio::ReadFromFile(std::vector<Stock>& stocks, std::vector<FX>& fxs) {
 					std::cout << e.what();
 					std::cout << "error in file format, float value will be set to default (1.0)" << std::endl;
 				}
-				fxs.push_back(FX(name, rate));
+				fxs.push_back(FX(name, rate, 1));
 			}
 
 			ifile2.close();
@@ -388,4 +388,19 @@ void Portfolio::PurgeSession() {
 	else {
 		std::cout << "session data deleted!" << std::endl;
 	}
+}
+
+std::pair<float, float> Portfolio::GetReturn() const noexcept {
+	float sr = 0, fr = 0;
+	for (auto i = stocks.begin(); i != stocks.end(); i++) {
+		sr += i->weight * i->GetReturn();
+	}
+	for (auto i = fxs.begin(); i != fxs.end(); i++) {
+		fr += i->weight * i->GetReturn();
+	}
+
+	return std::make_pair(sr/stocks.size(), fr/stocks.size());
+}
+std::pair<float, float> Portfolio::GetStddev() const noexcept {
+
 }

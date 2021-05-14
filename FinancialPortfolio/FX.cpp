@@ -1,6 +1,6 @@
 #include "FX.h"
 
-FX::FX(const std::string& name, float rate) : name(name), rate(rate) {
+FX::FX(const std::string& name, float rate, float weight) : name(name), rate(rate), weight(weight) {
 	original_rate = rate;
 }
 

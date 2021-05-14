@@ -35,6 +35,10 @@ public:
 	void Graph(const std::string& name, const std::optional<uint32_t>& tp = std::nullopt);
 	void ShowDistributionType();
 
+	// MPT
+	std::pair<float, float> GetReturn() const noexcept;
+	std::pair<float, float> GetStddev() const noexcept;
+
 	void SetDistribution(const DistributionTypes& dist_type);
 
 	std::vector<Stock> stocks;

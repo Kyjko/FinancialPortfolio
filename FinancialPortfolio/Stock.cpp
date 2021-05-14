@@ -1,6 +1,6 @@
 #include "Stock.h"
 
-Stock::Stock(const std::string& name, float initial_value) : name(name), value(initial_value) {
+Stock::Stock(const std::string& name, float initial_value, float weight) : name(name), value(initial_value), weight(weight) {
 	original_value = value;
 }
 
