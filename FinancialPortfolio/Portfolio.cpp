@@ -423,4 +423,5 @@ std::pair<float, float> Portfolio::GetReturn() const noexcept {
 }
 std::pair<float, float> Portfolio::GetStddev() const noexcept {
 	// TODO: Covariance matrix!!
+	return std::make_pair(0, 0);
 }
