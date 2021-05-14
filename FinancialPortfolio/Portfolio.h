@@ -31,6 +31,7 @@ public:
 	void Simulate(uint32_t period);
 	void Reset();
 	void ShowParams(const std::optional<std::string>& p = std::nullopt);
+	void PrintReturnAndStddev() const noexcept;
 	void Info() noexcept;
 	void Graph(const std::string& name, const std::optional<uint32_t>& tp = std::nullopt);
 	void ShowDistributionType();

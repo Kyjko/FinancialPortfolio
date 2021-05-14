@@ -103,7 +103,8 @@ void Portfolio::Reset() {
 }
 
 void Portfolio::Print() noexcept {
-	std::cout << "----Portfolio:----" << std::endl;
+	std::cout << "-----Portfolio:-----" << std::endl;
+	PrintReturnAndStddev();
 	std::cout << "--Stocks--" << std::endl;
 	for (auto i = stocks.begin(); i != stocks.end(); i++) {
 		i->Print();
@@ -114,6 +115,23 @@ void Portfolio::Print() noexcept {
 		i->Print();
 		std::cout << "\tReturn: x" << i->GetReturn() << " (" << i->GetLogReturn()*100.0 << "%)" << std::endl;
 	}
+}
+
+void Portfolio::PrintReturnAndStddev() const noexcept {
+	std::pair<float, float> s = GetStddev();
+	std::pair<float, float> r = GetReturn();
+	std::cout << "---Stddev of Stocks---" << std::endl;
+	std::cout << s.first << std::endl;
+	std::cout << "---Stddev of FXs---" << std::endl;
+	std::cout << s.second << std::endl;
+	std::cout << "---Return of Stocks---" << std::endl;
+	std::cout << r.first << std::endl;
+	std::cout << "---Return of FXs---" << std::endl;
+	std::cout << r.second << std::endl;
+	std::cout << "---Stddev of All---" << std::endl;
+	std::cout << (s.first + s.second) * 0.5f << std::endl;
+	std::cout << "----Return of All----" << std::endl;
+	std::cout << (r.first + r.second) * 0.5f << std::endl;
 }
 
 void Portfolio::Add(const Stock& s) {
