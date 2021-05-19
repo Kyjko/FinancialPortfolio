@@ -9,11 +9,29 @@ Matrix::Matrix(float first, Args&&... args) {
 	};
 
 	dim = sqrt(matrix.size());
+	if ((int)dim != dim) {
+		// matrix is not square
+		dim = 0;
+		matrix.clear();
+	}
 
 }
 
-Matrix::~Matrix() {
+Matrix::Matrix() : dim(0) {
 	matrix = std::vector<float>();
+}
+
+uint32_t Matrix::GetDim() const noexcept {
+	return dim;
+}
+
+Matrix::~Matrix() {
+	dim = 0;
+	matrix = std::vector<float>();
+}
+
+void Matrix::PushBack(float val) {
+	matrix.push_back(val);
 }
 
 std::ostream& operator<<(const Matrix& m, std::ostream& os) {
@@ -26,4 +44,47 @@ std::ostream& operator<<(const Matrix& m, std::ostream& os) {
 	}
 
 	return os;
+}
+
+Matrix operator+(Matrix& m, Matrix& other) {
+	Matrix res;
+	if (m.dim != other.dim) {
+		return res;
+	}
+	for (uint32_t i = 0; i < m.matrix.size(); i++) {
+		res.PushBack(m[i] + other[i]);
+	}
+
+	return res;
+}
+
+Matrix operator-(Matrix& m, Matrix& other) {
+	Matrix res;
+	if (m.dim != other.dim) {
+		return res;
+	}
+	for (uint32_t i = 0; i < m.matrix.size(); i++) {
+		res.PushBack(m[i] - other[i]);
+	}
+
+	return res;
+}
+
+Matrix operator*(Matrix& m, Matrix& other) {
+	Matrix res;
+	
+	if (m.dim != other.dim) {
+		return res;
+	}
+
+	for (int i = 0; i < m.dim; i++) {
+		for (int j = 0; j < m.dim; j++) {
+			for (int k = 0; k < m.dim; k++) {
+				res.PushBack(m[i * m.dim + k] * other[k * other.dim + j]);
+			}
+		}
+	}
+
+	return res;
+
 }
