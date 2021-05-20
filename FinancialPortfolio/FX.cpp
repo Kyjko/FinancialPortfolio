@@ -35,6 +35,6 @@ double FX::GetLogReturn() const noexcept {
 }
 
 std::ostream& operator<<(std::ostream& s, const FX& fx) {
-	s << fx.name << " - " << fx.rate << std::endl;
+	s << fx.name << " - " << fx.rate << "(weight: " << fx.weight << ")" << std::endl;
 	return s;
 }

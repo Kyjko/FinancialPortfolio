@@ -398,7 +398,7 @@ void Portfolio::ReadFromFile(std::vector<Stock>& stocks, std::vector<FX>& fxs) {
 	s_thread.join();
 	f_thread.join();
 
-	
+	AdjustWeights();
 }
 
 void Portfolio::AdjustWeights() noexcept {

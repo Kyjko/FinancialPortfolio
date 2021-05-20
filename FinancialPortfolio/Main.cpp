@@ -37,10 +37,10 @@ void PrintBanner() noexcept {
 }
 
 void AddInitialEntries(std::unique_ptr<Portfolio>& p) {
-	p->stocks.push_back(Stock("STOCK1", 50, 1));
-	p->stocks.push_back(Stock("STOCK2", 150, 1));
-	p->fxs.push_back(FX("EURUSD", 1.21f, 1));
-	p->fxs.push_back(FX("EURHUF", 360.54f, 1));
+	p->Add(Stock("STOCK1", 50, 1));
+	p->Add(Stock("STOCK2", 150, 1));
+	p->Add(FX("EURUSD", 1.21f, 1));
+	p->Add(FX("EURHUF", 360.54f, 1));
 }
 
 void PrintHelp() noexcept {
