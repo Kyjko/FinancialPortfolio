@@ -26,6 +26,22 @@ Portfolio::~Portfolio() {
 		}
 		
 	}
+	std::ifstream f2("graphdata_ma12.fp");
+	if (f2.good()) {
+		f2.close();
+		if (std::remove("graphdata_ma12.fp") != 0) {
+			FILE_REMOVE_ERR("unknown error");
+		}
+
+	}
+	std::ifstream f3("graphdata_ma26.fp");
+	if (f3.good()) {
+		f3.close();
+		if (std::remove("graphdata_ma26.fp") != 0) {
+			FILE_REMOVE_ERR("unknown error");
+		}
+
+	}
 	std::cout << "Exited portfolio (id: " << id << ")" << std::endl;
 }
 
@@ -272,7 +288,57 @@ void Portfolio::Graph(const std::string& name, const std::optional<uint32_t>& tp
 		FILE_OPEN_ERR("open error");
 	}
 
-	_Display(values.data(), values.size(), DEFAULT_FIGUREWINDOW_WIDTH, DEFAULT_FIGUREWINDOW_HEIGHT, 0);
+	std::ofstream ofile2("graphdata_ma12.fp", std::ios::trunc);
+	if (ofile2.good()) {
+		uint32_t idx = 0;
+		uint32_t c = 0;
+		for (auto i = values.begin(); i != values.end(); i++) {
+			float r = 0;
+			if (idx >= 12) {
+				for(int k = c; k < idx; k++) {
+					r += values[k];
+				}
+				r /= 12;
+				ofile2 << r;
+				ofile2 << '\n';
+				c++;
+			}
+			idx++;
+		}
+		ofile2.close();
+	}
+	else {
+		FILE_OPEN_ERR("open error");
+	}
+
+	std::ofstream ofile3("graphdata_ma26.fp", std::ios::trunc);
+	if (ofile3.good()) {
+		uint32_t idx = 0;
+		uint32_t c = 0;
+		for (auto i = values.begin(); i != values.end(); i++) {
+			float r = 0;
+			if (idx >= 26) {
+				for (int k = c; k < idx; k++) {
+					r += values[k];
+				}
+				r /= 26;
+				ofile3 << r;
+				ofile3 << '\n';
+				c++;
+			}
+			idx++;
+		}
+		ofile3.close();
+	}
+	else {
+		FILE_OPEN_ERR("open error");
+	}
+
+	/*for (auto i = values.begin(); i != values.end(); i++) {
+		std::cout << *i << "\n";
+	}*/
+
+	_Display(values.data(), values.size(), DEFAULT_FIGUREWINDOW_WIDTH, DEFAULT_FIGUREWINDOW_HEIGHT, 1);
 }
 
 void Portfolio::ShowParams(const std::optional<std::string>& p) {

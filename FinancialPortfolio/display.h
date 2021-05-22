@@ -9,4 +9,4 @@
 
 // Display API
 
-void _Display(const float* __restrict data, const size_t len, const int W, const int H, const short is_advanced);
+void _Display(const float* data, const size_t len, const int W, const int H, const short is_advanced);
