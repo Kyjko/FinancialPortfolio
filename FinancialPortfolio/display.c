@@ -3,100 +3,6 @@
 #pragma warning(disable : 6386)
 #pragma warning(disable : 6385)
 
-errno_t GetMA12(double* data_ma12) {
-	
-	FILE* f;
-	f = fopen("graphdata_ma12.fp", "r");
-	if (f == NULL) {
-		perror("couldn't open data file!\n");
-		return -2;
-	}
-	fseek(f, 0, SEEK_SET);
-	fseek(f, 0, SEEK_END);
-	size_t sz = ftell(f);
-	fseek(f, 0, SEEK_SET);
-
-	char* rawdata = malloc(sz);
-	if (rawdata == NULL) {
-		perror("couldn't allocate memory for data!\n");
-		return -3;
-	}
-
-	char c;
-	int newlines = 0;
-	while (!feof(f)) {
-		c = fgetc(f);
-		if (c == '\n')
-			newlines++;
-	}
-
-	printf("%d\n", newlines);
-
-	fseek(f, 0, SEEK_SET);
-	fread(rawdata, 1, sz, f);
-
-	char* tok = strtok(rawdata, "\n");
-	int i = 0;
-	while (tok != NULL) {
-		data_ma12[i] = atof(tok);
-		tok = strtok(NULL, "\n");
-		i++;
-	}
-
-	free(rawdata);
-
-	fclose(f);
-
-	return 0;
-}
-
-errno_t GetMA26(double* data_ma26) {
-
-	FILE* f;
-	f = fopen("graphdata_ma26.fp", "r");
-	if (f == NULL) {
-		perror("couldn't open data file!\n");
-		return -2;
-	}
-	fseek(f, 0, SEEK_SET);
-	fseek(f, 0, SEEK_END);
-	size_t sz = ftell(f);
-	fseek(f, 0, SEEK_SET);
-
-	char* rawdata = malloc(sz);
-	if (rawdata == NULL) {
-		perror("couldn't allocate memory for data!\n");
-		return -3;
-	}
-
-	char c;
-	int newlines = 0;
-	while (!feof(f)) {
-		c = fgetc(f);
-		if (c == '\n')
-			newlines++;
-	}
-
-	printf("%d\n", newlines);
-
-
-	fseek(f, 0, SEEK_SET);
-	fread(rawdata, 1, sz, f);
-
-	char* tok = strtok(rawdata, "\n");
-	int i = 0;
-	while (tok != NULL) {
-		data_ma26[i] = atof(tok);
-		tok = strtok(NULL, "\n");
-		i++;
-	}
-
-	free(rawdata);
-
-	fclose(f);
-
-	return 0;
-}
 
 __declspec(noalias) void RenderNormal(SDL_Renderer* r, const size_t len, const float* normalized_data, const float* data, const int W, const int H) {
 	SDL_SetRenderDrawColor(r, 180, 255, 0, 255);
@@ -154,19 +60,7 @@ __declspec(noalias) void RenderAdvanced(SDL_Renderer* r, int lines, const double
 	SDL_RenderSetScale(r, 1, 1);
 }
 
-void _Display(const float* data, const size_t len, const int W, const int H, const short is_advanced) {
-	
-	double* a_data_ma12 = malloc(sizeof(double)*len);
-	double* a_data_ma26 = malloc(sizeof(double) * len);
-
-	int maxlines = 0;
-
-	/*if (GetMA12(&a_data_ma12) < 0) {
-		fprintf(stderr, "Couldn't get moving average (rolling=12) data!\n");
-	}
-	if (GetMA26(&a_data_ma26) < 0) {
-		fprintf(stderr, "Couldn't get moving average (rolling=26) data!\n");
-	}*/
+void _Display(const float* data, const float* data_ma12, const float* data_ma26, const size_t len, const int W, const int H, const short is_advanced) {
 
 	int lines = LINES;
 
@@ -175,9 +69,9 @@ void _Display(const float* data, const size_t len, const int W, const int H, con
 
 	float s = 0.5;
 
-	for (int i = 0; i < lines; i++) {
+	/*for (int i = 0; i < lines; i++) {
 		printf("%f\n", data[i]);
-	}
+	}*/
 	
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		return;
@@ -284,13 +178,15 @@ void _Display(const float* data, const size_t len, const int W, const int H, con
 			RenderNormal(r, len, normalized_data, data, W, H);
 		}
 		else {
-			RenderAdvanced(r, lines, data, a_data_ma12, a_data_ma26, pan_x, pan_y, s, W, H);
+			RenderAdvanced(r, lines, data, data_ma12, data_ma26, pan_x, pan_y, s, W, H);
 		}
 
 		SDL_RenderPresent(r);
 	}
 
 	free(normalized_data);
+
+	
 	SDL_DestroyWindow(w);
 	SDL_DestroyRenderer(r);
 	SDL_Quit();

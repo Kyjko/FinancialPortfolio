@@ -209,6 +209,8 @@ void Portfolio::Graph(const std::string& name, const std::optional<uint32_t>& tp
 	std::cout << "time period: " << p << std::endl;
 
 	std::vector<float> values;
+	std::vector<float> values_ma12;
+	std::vector<float> values_ma26;
 
 	if (stockfound) {
 		std::cout << "plotting " << name << " (stock)" << std::endl;
@@ -300,6 +302,7 @@ void Portfolio::Graph(const std::string& name, const std::optional<uint32_t>& tp
 				}
 				r /= 12;
 				ofile2 << r;
+				values_ma12.push_back(r);
 				ofile2 << '\n';
 				c++;
 			}
@@ -323,6 +326,7 @@ void Portfolio::Graph(const std::string& name, const std::optional<uint32_t>& tp
 				}
 				r /= 26;
 				ofile3 << r;
+				values_ma26.push_back(r);
 				ofile3 << '\n';
 				c++;
 			}
@@ -338,7 +342,7 @@ void Portfolio::Graph(const std::string& name, const std::optional<uint32_t>& tp
 		std::cout << *i << "\n";
 	}*/
 
-	_Display(values.data(), values.size(), DEFAULT_FIGUREWINDOW_WIDTH, DEFAULT_FIGUREWINDOW_HEIGHT, 1);
+	_Display(values.data(), values_ma12.data(), values_ma26.data(), values.size(), DEFAULT_FIGUREWINDOW_WIDTH, DEFAULT_FIGUREWINDOW_HEIGHT, 1);
 }
 
 void Portfolio::ShowParams(const std::optional<std::string>& p) {
